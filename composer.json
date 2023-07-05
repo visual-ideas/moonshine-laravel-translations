@@ -1,6 +1,6 @@
 {
     "name": "visual-ideas/moonshine-laravel-translations",
-    "description": "Description",
+    "description": "Manage Laravel translation files with MoonShine admin panel",
     "keywords": [
         "PHP",
         "Laravel",
