@@ -5,8 +5,9 @@
         "PHP",
         "Laravel",
         "Eloquent",
-        "Language",
-        "Translations",
+        "Localization",
+        "Multilingual",
+        "Translation",
         "GUI",
         "VisualIdeas",
         "VI",
@@ -28,6 +29,7 @@
     ],
     "require": {
         "php": "^8.0|^8.1|^8.2",
+        "laravel/framework": "^9.21|^10.0",
         "ext-json": "*"
     },
     "require-dev": {
