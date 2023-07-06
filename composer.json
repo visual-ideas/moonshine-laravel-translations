@@ -30,6 +30,7 @@
     "require": {
         "php": "^8.0|^8.1|^8.2",
         "laravel/framework": "^9.21|^10.0",
+        "moonshine/moonshine": "^1.60",
         "ext-json": "*"
     },
     "require-dev": {
