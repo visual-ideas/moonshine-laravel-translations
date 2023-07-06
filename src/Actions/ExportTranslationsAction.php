@@ -7,14 +7,12 @@ namespace VI\MoonShineLaravelTranslations\Actions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use MoonShine\Actions\Action;
 use MoonShine\MoonShineUI;
 use VI\MoonShineLaravelTranslations\Models\MoonshineLaravelTranslation;
 
 class ExportTranslationsAction extends Action
 {
-
     protected ?string $icon = 'heroicons.outline.arrow-up-tray';
 
 
@@ -37,8 +35,10 @@ class ExportTranslationsAction extends Action
 
                 if ($group == 'json') {
 
-                    $langDisk->put($locale.'.json',
-                        json_encode($groupData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+                    $langDisk->put(
+                        $locale.'.json',
+                        json_encode($groupData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+                    );
 
                     continue;
                 }
@@ -48,7 +48,7 @@ class ExportTranslationsAction extends Action
             }
         }
 
-        MoonshineLaravelTranslation::query()->update(['is_changed'=>false]);
+        MoonshineLaravelTranslation::query()->update(['is_changed' => false]);
 
         MoonShineUI::toast(
             'Экспортировано',

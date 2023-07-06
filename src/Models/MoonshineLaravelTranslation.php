@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class MoonshineLaravelTranslation extends Model
 {
-
     public static ?array $localesList = null;
     public static ?array $groupsList = null;
 

@@ -7,15 +7,11 @@ namespace VI\MoonShineLaravelTranslations\Resources;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use MoonShine\Actions\MassActions;
-use MoonShine\Decorations\Block;
 use MoonShine\Fields\ID;
 use MoonShine\Fields\NoInput;
 use MoonShine\Fields\StackFields;
-use MoonShine\Fields\Text;
 use MoonShine\Fields\Textarea;
 use MoonShine\Filters\SelectFilter;
-use MoonShine\Filters\TextFilter;
 use MoonShine\QueryTags\QueryTag;
 use MoonShine\Resources\Resource;
 use VI\MoonShineLaravelTranslations\Actions\ExportTranslationsAction;
@@ -61,7 +57,8 @@ class MoonShineLaravelTranslationResource extends Resource
                 ->sortable()
                 ->hideOnForm(),
 
-            NoInput::make('Локаль', 'locale', fn(MoonshineLaravelTranslation $moonshineLaravelTranslation
+            NoInput::make('Локаль', 'locale', fn (
+                MoonshineLaravelTranslation $moonshineLaravelTranslation
             ) => Str::upper($moonshineLaravelTranslation->locale))
                 ->badge('pink')
                 ->sortable(),
@@ -72,12 +69,18 @@ class MoonShineLaravelTranslationResource extends Resource
                     NoInput::make('Группа', 'group')
                         ->badge('blue'),
 
-                    NoInput::make('Ключ', 'key',
-                        fn(MoonshineLaravelTranslation $moonshineLaravelTranslation
+                    NoInput::make(
+                        'Ключ',
+                        'key',
+                        fn (
+                            MoonshineLaravelTranslation $moonshineLaravelTranslation
                         ) => str($moonshineLaravelTranslation->key)
-                            ->replaceMatches('/:([a-z\_]+)/ui',
-                                '<b style="background-color: rgba(100,255,100, 0.3);">$0</b>')
-                            ->toString()),
+                            ->replaceMatches(
+                                '/:([a-z\_]+)/ui',
+                                '<b style="background-color: rgba(100,255,100, 0.3);">$0</b>'
+                            )
+                            ->toString()
+                    ),
 
                 ])
                 ->sortable()
@@ -89,19 +92,28 @@ class MoonShineLaravelTranslationResource extends Resource
                 ->badge('blue')
                 ->hideOnIndex(),
 
-            NoInput::make('Ключ', 'key',
-                fn(MoonshineLaravelTranslation $moonshineLaravelTranslation
+            NoInput::make(
+                'Ключ',
+                'key',
+                fn (
+                    MoonshineLaravelTranslation $moonshineLaravelTranslation
                 ) => str($moonshineLaravelTranslation->key)
-                    ->replaceMatches('/:([a-z\_]+)/ui',
-                        '<b style="background-color: rgba(100,255,100, 0.3);">$0</b>')
-                    ->toString())
+                    ->replaceMatches(
+                        '/:([a-z\_]+)/ui',
+                        '<b style="background-color: rgba(100,255,100, 0.3);">$0</b>'
+                    )
+                    ->toString()
+            )
                 ->hideOnIndex(),
 
 
-            NoInput::make('Значение', 'value',
-                fn(MoonshineLaravelTranslation $moonshineLaravelTranslation) => str($moonshineLaravelTranslation->value)
+            NoInput::make(
+                'Значение',
+                'value',
+                fn (MoonshineLaravelTranslation $moonshineLaravelTranslation) => str($moonshineLaravelTranslation->value)
                     ->replaceMatches('/:([a-z\_]+)/ui', '<b style="background-color: rgba(100,255,100, 0.3);">$0</b>')
-                    ->toString())
+                    ->toString()
+            )
                 ->sortable()
                 ->hideOnForm(),
 
@@ -132,13 +144,17 @@ class MoonShineLaravelTranslationResource extends Resource
 
             SelectFilter::make('Локали', 'locale')
                 ->nullable()
-                ->options(array_combine(MoonshineLaravelTranslation::getLocalesList(),
-                    MoonshineLaravelTranslation::getLocalesList())),
+                ->options(array_combine(
+                    MoonshineLaravelTranslation::getLocalesList(),
+                    MoonshineLaravelTranslation::getLocalesList()
+                )),
 
             SelectFilter::make('Группы', 'group')
                 ->nullable()
-                ->options(array_combine(MoonshineLaravelTranslation::getGroupsList(),
-                    MoonshineLaravelTranslation::getGroupsList())),
+                ->options(array_combine(
+                    MoonshineLaravelTranslation::getGroupsList(),
+                    MoonshineLaravelTranslation::getGroupsList()
+                )),
 
         ];
     }

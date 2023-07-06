@@ -14,7 +14,6 @@ use VI\MoonShineLaravelTranslations\Models\MoonshineLaravelTranslation;
 
 class ImportTranslationsAction extends Action
 {
-
     use WithConfirmation;
 
     protected ?string $icon = 'heroicons.outline.arrow-down-tray';
@@ -51,6 +50,7 @@ class ImportTranslationsAction extends Action
                     ]);
                     $i++;
                 }
+
                 return;
             }
 
@@ -70,6 +70,7 @@ class ImportTranslationsAction extends Action
                     ]);
                     $i++;
                 }
+
                 return;
             }
 
@@ -88,11 +89,11 @@ class ImportTranslationsAction extends Action
     protected function updateOrCreateTranslation(array $data)
     {
 
-        if (!empty(config('moonshine-laravel-translations.locales')) && !in_array($data['locale'],config('moonshine-laravel-translations.locales'))) {
+        if (! empty(config('moonshine-laravel-translations.locales')) && ! in_array($data['locale'], config('moonshine-laravel-translations.locales'))) {
             return;
         }
 
-        if (!empty(config('moonshine-laravel-translations.ignored')) && in_array($data['group'],config('moonshine-laravel-translations.ignored'))) {
+        if (! empty(config('moonshine-laravel-translations.ignored')) && in_array($data['group'], config('moonshine-laravel-translations.ignored'))) {
             return;
         }
 
