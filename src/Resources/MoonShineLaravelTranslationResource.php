@@ -74,7 +74,7 @@ class MoonShineLaravelTranslationResource extends Resource
                     NoInput::make(
                         'Ключ',
                         'key',
-                        fn(
+                        fn (
                             MoonshineLaravelTranslation $moonshineLaravelTranslation
                         ) => str($moonshineLaravelTranslation->key)
                             ->replaceMatches(
@@ -97,7 +97,7 @@ class MoonShineLaravelTranslationResource extends Resource
             NoInput::make(
                 'Ключ',
                 'key',
-                fn(
+                fn (
                     MoonshineLaravelTranslation $moonshineLaravelTranslation
                 ) => str($moonshineLaravelTranslation->key)
                     ->replaceMatches(
@@ -195,12 +195,12 @@ class MoonShineLaravelTranslationResource extends Resource
 
         $tags = [];
 
-        //foreach (MoonshineLaravelTranslation::getGroupsList() as $groupList) {
-        //    $tags[] = QueryTag::make(
-        //        $groupList, // Tag Title
-        //        fn(Builder $query) => $query->where('group', $groupList) // Query builder
-        //    );
-        //}
+        foreach (MoonshineLaravelTranslation::getGroupsList() as $groupList) {
+            $tags[] = QueryTag::make(
+                $groupList, // Tag Title
+                fn (Builder $query) => $query->where('group', $groupList) // Query builder
+            );
+        }
 
         return $tags;
     }
