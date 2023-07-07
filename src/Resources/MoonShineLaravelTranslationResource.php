@@ -10,13 +10,13 @@ use Illuminate\Support\Str;
 use MoonShine\Fields\ID;
 use MoonShine\Fields\NoInput;
 use MoonShine\Fields\StackFields;
-use MoonShine\Fields\Textarea;
 use MoonShine\Filters\SelectFilter;
 use MoonShine\QueryTags\QueryTag;
 use MoonShine\Resources\Resource;
 use VI\MoonShineLaravelTranslations\Actions\ExportTranslationsAction;
 use VI\MoonShineLaravelTranslations\Actions\ImportTranslationsAction;
 use VI\MoonShineLaravelTranslations\Models\MoonshineLaravelTranslation;
+use VI\MoonShineSpatieTranslatable\Fields\Translatable;
 
 class MoonShineLaravelTranslationResource extends Resource
 {
@@ -57,11 +57,13 @@ class MoonShineLaravelTranslationResource extends Resource
                 ->sortable()
                 ->hideOnForm(),
 
+            /*
             NoInput::make('Локаль', 'locale', fn (
                 MoonshineLaravelTranslation $moonshineLaravelTranslation
             ) => Str::upper($moonshineLaravelTranslation->locale))
                 ->badge('pink')
                 ->sortable(),
+            */
 
             StackFields::make('Группа/Ключ', 'group')
                 ->fields([
@@ -72,7 +74,7 @@ class MoonShineLaravelTranslationResource extends Resource
                     NoInput::make(
                         'Ключ',
                         'key',
-                        fn (
+                        fn(
                             MoonshineLaravelTranslation $moonshineLaravelTranslation
                         ) => str($moonshineLaravelTranslation->key)
                             ->replaceMatches(
@@ -95,7 +97,7 @@ class MoonShineLaravelTranslationResource extends Resource
             NoInput::make(
                 'Ключ',
                 'key',
-                fn (
+                fn(
                     MoonshineLaravelTranslation $moonshineLaravelTranslation
                 ) => str($moonshineLaravelTranslation->key)
                     ->replaceMatches(
@@ -110,14 +112,29 @@ class MoonShineLaravelTranslationResource extends Resource
             NoInput::make(
                 'Значение',
                 'value',
-                fn (MoonshineLaravelTranslation $moonshineLaravelTranslation) => str($moonshineLaravelTranslation->value)
-                    ->replaceMatches('/:([a-z\_]+)/ui', '<b style="background-color: rgba(100,255,100, 0.3);">$0</b>')
-                    ->toString()
-            )
-                ->sortable()
-                ->hideOnForm(),
+                function (MoonshineLaravelTranslation $moonshineLaravelTranslation) {
+                    $html = '<table>';
+                    foreach ($moonshineLaravelTranslation->getTranslations('value') as $code => $value) {
+                        $html .= sprintf(
+                            '<tr><td><b>%s</b></td><td width="100%%">%s</td><tr>',
+                            str($code)->upper(),
+                            str($value)->replaceMatches(
+                                '/:([a-z\_]+)/ui',
+                                '<b style="background-color: rgba(100,255,100, 0.3);">$0</b>'
+                            )
+                        );
+                    }
 
-            TextArea::make('Значение', 'value')
+                    return $html.'</table>';
+                }
+            )
+                ->sortable(),
+
+
+            Translatable::make(
+                'Значение',
+                'value'
+            )->languages(config('moonshine-laravel-translations.locales'))
                 ->hideOnIndex()
                 ->hideOnDetail(),
         ];
@@ -129,25 +146,27 @@ class MoonShineLaravelTranslationResource extends Resource
     public function rules($item): array
     {
         return [
-            'value' => ['nullable', 'string', ''],
+            //'value' => ['nullable', 'string', ''],
         ];
     }
 
     public function search(): array
     {
-        return ['id', 'group', 'key', 'locale', 'value'];
+        return ['id', 'group', 'key', 'value'];
     }
 
     public function filters(): array
     {
         return [
 
+            /*
             SelectFilter::make('Локали', 'locale')
                 ->nullable()
                 ->options(array_combine(
                     MoonshineLaravelTranslation::getLocalesList(),
                     MoonshineLaravelTranslation::getLocalesList()
                 )),
+            */
 
             SelectFilter::make('Группы', 'group')
                 ->nullable()

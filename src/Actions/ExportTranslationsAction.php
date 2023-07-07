@@ -24,14 +24,24 @@ class ExportTranslationsAction extends Action
             'root' => lang_path(),
         ]);
 
-        $translations = MoonshineLaravelTranslation::toBase()->get();
+        $translations = MoonshineLaravelTranslation::orderBy('list_order')->get();
 
-        foreach ($translations->groupBy('locale') as $locale => $localeData) {
-            foreach ($localeData->groupBy('group') as $group => $groupData) {
+        $translations = $translations->mapWithKeys(function (
+            MoonshineLaravelTranslation $moonshineLaravelTranslation,
+            int $key
+        ) {
 
-                $groupData = $groupData->sortBy('list_order')->pluck('value', 'key')->toArray();
+            $tempArray = [];
 
-                $groupData = Arr::undot($groupData);
+            foreach ($moonshineLaravelTranslation->getTranslations('value') as $locale => $translation) {
+                $tempArray[$locale][$moonshineLaravelTranslation->group][$moonshineLaravelTranslation->key] = $translation;
+            }
+
+            return $tempArray;
+        });
+
+        foreach ($translations as $locale => $localeData) {
+            foreach ($localeData as $group => $groupData) {
 
                 if ($group == 'json') {
 
@@ -43,7 +53,8 @@ class ExportTranslationsAction extends Action
                     continue;
                 }
 
-                $langDisk->put($locale.'/'.$group.'.php', "<?php\n\ndeclare(strict_types=1);\n\nreturn ".$this->prettyVarExport($groupData).";\n");
+                $langDisk->put($locale.'/'.$group.'.php',
+                    "<?php\n\ndeclare(strict_types=1);\n\nreturn ".$this->prettyVarExport($groupData).";\n");
 
             }
         }
@@ -72,7 +83,6 @@ class ExportTranslationsAction extends Action
             "/\n([\s ]{2})(['|\]])/ui" => "\n    $2",
         ];
         $output = preg_replace(array_keys($patterns), array_values($patterns), $export);
-
 
 
         return trim($output);

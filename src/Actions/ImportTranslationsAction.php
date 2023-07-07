@@ -27,6 +27,8 @@ class ImportTranslationsAction extends Action
             'root' => lang_path(),
         ]);
 
+        MoonshineLaravelTranslation::truncate();
+
         collect($langDisk->allFiles())->each(function (string $fileName) use ($langDisk) {
 
             $fileName = str($fileName);
@@ -89,23 +91,30 @@ class ImportTranslationsAction extends Action
     protected function updateOrCreateTranslation(array $data)
     {
 
-        if (! empty(config('moonshine-laravel-translations.locales')) && ! in_array($data['locale'], config('moonshine-laravel-translations.locales'))) {
+        if (! empty(config('moonshine-laravel-translations.locales')) && ! in_array(
+            $data['locale'],
+            config('moonshine-laravel-translations.locales')
+        )) {
             return;
         }
 
-        if (! empty(config('moonshine-laravel-translations.ignored')) && in_array($data['group'], config('moonshine-laravel-translations.ignored'))) {
+        if (! empty(config('moonshine-laravel-translations.ignored')) && in_array(
+            $data['group'],
+            config('moonshine-laravel-translations.ignored')
+        )) {
             return;
         }
 
-        MoonshineLaravelTranslation::updateOrCreate([
+        $moonshineLaravelTranslation = MoonshineLaravelTranslation::updateOrCreate([
             'group' => $data['group'],
             'key' => $data['key'],
-            'locale' => $data['locale'],
         ], [
             'list_order' => $data['list_order'] ?? 0,
-            'value' => $data['value'],
             'is_changed' => false,
         ]);
+
+
+        $moonshineLaravelTranslation->setTranslation('value', $data['locale'], $data['value'])->save();
     }
 
 }

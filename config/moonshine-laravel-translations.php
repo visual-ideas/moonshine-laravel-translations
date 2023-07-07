@@ -17,7 +17,7 @@ return [
     'main-locale' => config('app.fallback_locale'),
 
     'locales' => [
-        // 'en',
+        config('app.fallback_locale'),
         // 'ru',
     ],
 ];

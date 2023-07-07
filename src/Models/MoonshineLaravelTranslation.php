@@ -3,11 +3,17 @@
 namespace VI\MoonShineLaravelTranslations\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Translatable\HasTranslations;
 
 class MoonshineLaravelTranslation extends Model
 {
+
+    use HasTranslations;
+
     public static ?array $localesList = null;
     public static ?array $groupsList = null;
+
+    public $translatable = ['value'];
 
     protected $fillable = [
         'group',
