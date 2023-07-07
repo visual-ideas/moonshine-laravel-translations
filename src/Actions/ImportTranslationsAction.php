@@ -45,7 +45,6 @@ class ImportTranslationsAction extends Action
                 foreach ($arrayTranslations as $key => $value) {
                     $this->updateOrCreateTranslation([
                         'group' => $groupName,
-                        'list_order' => $i,
                         'key' => $key,
                         'locale' => $locale,
                         'value' => $value,
@@ -61,16 +60,13 @@ class ImportTranslationsAction extends Action
                 $groupName = $fileName->replaceFirst($locale.'/', '')->replaceLast('.php', '');
                 $arrayTranslations = include lang_path($fileName->toString());
                 $arrayTranslations = Arr::dot($arrayTranslations);
-                $i = 0;
                 foreach ($arrayTranslations as $key => $value) {
                     $this->updateOrCreateTranslation([
                         'group' => $groupName,
-                        'list_order' => $i,
                         'key' => $key,
                         'locale' => $locale,
                         'value' => $value,
                     ]);
-                    $i++;
                 }
 
                 return;
@@ -109,7 +105,6 @@ class ImportTranslationsAction extends Action
             'group' => $data['group'],
             'key' => $data['key'],
         ], [
-            'list_order' => $data['list_order'] ?? 0,
             'is_changed' => false,
         ]);
 

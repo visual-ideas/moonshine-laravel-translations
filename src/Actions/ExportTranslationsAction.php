@@ -24,7 +24,7 @@ class ExportTranslationsAction extends Action
             'root' => lang_path(),
         ]);
 
-        $translations = MoonshineLaravelTranslation::orderBy('list_order')->get();
+        $translations = MoonshineLaravelTranslation::orderBy('group, key')->get();
 
         $translations = $translations->mapWithKeys(function (
             MoonshineLaravelTranslation $moonshineLaravelTranslation,
@@ -42,6 +42,8 @@ class ExportTranslationsAction extends Action
 
         foreach ($translations as $locale => $localeData) {
             foreach ($localeData as $group => $groupData) {
+
+                $groupData = Arr::undot($groupData);
 
                 if ($group == 'json') {
 

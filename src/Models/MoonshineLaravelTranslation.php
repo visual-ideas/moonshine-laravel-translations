@@ -17,7 +17,6 @@ class MoonshineLaravelTranslation extends Model
 
     protected $fillable = [
         'group',
-        'list_order',
         'key',
         'locale',
         'value',
