@@ -24,7 +24,7 @@ class ExportTranslationsAction extends Action
             'root' => lang_path(),
         ]);
 
-        $translations = MoonshineLaravelTranslation::orderBy('group, key')->get();
+        $translations = MoonshineLaravelTranslation::orderByRaw('`group`, `key`')->get();
 
         $translations = $translations->mapWithKeys(function (
             MoonshineLaravelTranslation $moonshineLaravelTranslation,
