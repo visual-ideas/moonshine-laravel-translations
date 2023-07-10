@@ -24,23 +24,30 @@ class ExportTranslationsAction extends Action
             'root' => lang_path(),
         ]);
 
-        $translations = MoonshineLaravelTranslation::orderByRaw('`group`, `key`')->get();
+        $translations = MoonshineLaravelTranslation::orderByRaw('`group`, `key`')
+            ->get()
+            ->sortBy('group')
+            ->groupBy('group')
+            ->map(fn ($translationGroup) => $translationGroup
+                ->sortBy('key')
+                ->mapWithKeys(fn (
+                    $translations,
+                    $key
+                ) => [$translations->key => $translations->getTranslations('value')]))
+            ->toArray();
 
-        $translations = $translations->mapWithKeys(function (
-            MoonshineLaravelTranslation $moonshineLaravelTranslation,
-            int $key
-        ) {
+        $arrayTranslations = [];
 
-            $tempArray = [];
-
-            foreach ($moonshineLaravelTranslation->getTranslations('value') as $locale => $translation) {
-                $tempArray[$locale][$moonshineLaravelTranslation->group][$moonshineLaravelTranslation->key] = $translation;
+        foreach ($translations as $group => $keys) {
+            foreach ($keys as $key => $values) {
+                ksort($values);
+                foreach ($values as $locale => $value) {
+                    $arrayTranslations[$locale][$group][$key] = $value;
+                }
             }
+        }
 
-            return $tempArray;
-        });
-
-        foreach ($translations as $locale => $localeData) {
+        foreach ($arrayTranslations as $locale => $localeData) {
             foreach ($localeData as $group => $groupData) {
 
                 $groupData = Arr::undot($groupData);
@@ -55,8 +62,10 @@ class ExportTranslationsAction extends Action
                     continue;
                 }
 
-                $langDisk->put($locale.'/'.$group.'.php',
-                    "<?php\n\ndeclare(strict_types=1);\n\nreturn ".$this->prettyVarExport($groupData).";\n");
+                $langDisk->put(
+                    $locale.'/'.$group.'.php',
+                    "<?php\n\ndeclare(strict_types=1);\n\nreturn ".$this->prettyVarExport($groupData).";\n"
+                );
 
             }
         }
