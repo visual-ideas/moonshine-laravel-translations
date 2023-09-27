@@ -34,6 +34,8 @@ class MoonShineLaravelTranslationResource extends Resource
         'show', 'edit', /*'delete'*/
     ];
 
+    protected string $routeAfterSave = 'show'; 
+
     public static string $orderField = 'group';
 
     public function trClass(Model $item, int $index): string
